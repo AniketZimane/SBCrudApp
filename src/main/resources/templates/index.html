@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home page</title>
+</head>
+<body>
+<center>
+    <form method="post" action="/emps/">
+        <h1>Welcome to Innovative things </h1>
+<!--        <input type="text" placeholder="Enter your Id" name="id"><br>-->
+        <input type="text" placeholder="Enter your Name" name="name"><br>
+        <input type="text" placeholder="Enter your Designation" name="designation"><br>
+        <input type="Number" placeholder="Enter your Salary" name="salary"><br>
+        <input type="reset" value="RESET">
+        <input type="SUBMIT" value="SUBMIT">
+    </form>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Designation</th>
+        <th>Salary</th>
+    </tr>
+    <tr th:each="emp :${emplist}">
+        <td th:text="${emp.id}"></td>
+        <td th:text="${emp.name}"></td>
+        <td th:text="${emp.designation}"></td>
+        <td th:text="${emp.salary}"></td>
+        <td><a th:href="@{/emps/delete/{empID}/(empID=${emp.id})}">Delete</a></td>
+    </tr>
+</table>
+</center>
+
+</body>
+</html>

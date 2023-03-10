@@ -16,4 +16,7 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long>
     List<Employee> findByNameAndDesignation(String name, String desig);
 
     List<Employee> findBySalaryGreaterThan(double sal);
+    List<Employee> findBySalaryLessThan(double sal);
+
+    List<Employee>findByNameLike(String name);
 }
