@@ -54,23 +54,30 @@ public class EmpController
         String fileNameOld=file.getOriginalFilename();
         String extension=fileNameOld.substring(fileNameOld.indexOf(".")+1);
         emp.setExt(extension);
-        Employee empNew = empRepo.save(emp);
-        String fileNameNew= empNew.getId()+"."+extension;
+        try
+        {
+            Employee empNew = empRepo.save(emp);
+            String fileNameNew= empNew.getId()+"."+extension;
 
-        System.out.println("Image  Name new"+ fileNameNew);
-        uploader.uploadFile(file,fileNameNew);
+            System.out.println("Image  Name new"+ fileNameNew);
+            uploader.uploadFile(file,fileNameNew);
+            model.addAttribute("status",1);
+        }
+        catch(Exception e1)
+        {
+            model.addAttribute("status",0);
+        }
 
-
-        Pageable pageable = PageRequest.of(curPage,maxSize, Sort.by("id").descending());
+        Pageable pageable = PageRequest.of(curPage-1,maxSize, Sort.by("id").descending());
         Page<Employee> page = empRepo.findAll(pageable);
         int totalPages=page.getTotalPages();
         List<Employee> emplist= page.toList();
 
+        System.out.println("empList = " + emplist.toString());
 
         model.addAttribute("emplist",emplist);
         model.addAttribute("totalPages",totalPages);
         model.addAttribute("curPage",curPage);
-        model.addAttribute("msg", "Employee Registration Successful");
 
         return "EmpReg";
     }
@@ -78,7 +85,16 @@ public class EmpController
     public String SubmitData(Model model, @PathVariable long empID)
     {
         int curPage=1;
-        empRepo.deleteById(empID);
+
+        try {
+            empRepo.deleteById(empID);
+            model.addAttribute("status",2);
+        }
+        catch(Exception ex)
+        {
+            model.addAttribute("status",3);
+        }
+
         Pageable pageable = (Pageable) PageRequest.of(curPage-1,maxSize, Sort.by("id").descending());
         Page<Employee> page = empRepo.findAll(pageable);
         int totalPages=page.getTotalPages();
@@ -89,8 +105,7 @@ public class EmpController
         model.addAttribute("curPage",curPage);
 
         model.addAttribute("emplist",emplist);
-        model.addAttribute("msg","Employee deleted successfully");
-        model.addAttribute("msg", "Record deleted successfully");
+
 
         return "EmpReg";
     }
