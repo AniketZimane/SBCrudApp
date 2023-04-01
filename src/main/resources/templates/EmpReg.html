@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>EmployeeManagement</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assets/css/Login-Form-Basic-icons.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        function filterTbl(input) {
+		  var input, filter, table, tr, td, cell, i, j;
+		  input = document.getElementById("tSearch");
+		  filter = input.value.toUpperCase();
+		  table = document.getElementById("tbl");
+		  tr = table.getElementsByTagName("tr");
+		  for (i = 1; i < tr.length; i++) {
+		    // Hide the row initially.
+		    tr[i].style.display = "none";
+
+		    td = tr[i].getElementsByTagName("td");
+		    for (var j = 0; j < td.length; j++) {
+		      cell = tr[i].getElementsByTagName("td")[j];
+		      if (cell) {
+		        if (cell.innerHTML.toUpperCase().indexOf(filter) > -1) {
+		          tr[i].style.display = "";
+		          break;
+		        }
+		      }
+		    }
+		  }
+		}
+    </script>
+
+
+</head>
+
+<body>
+    <script th:inline="javascript">
+        var msg = [[${msg}]]
+
+        if(msg != null)
+        {
+            swal("Employee Registration", msg, "success");
+        }
+    </script>
+    <div th:replace="fragment.html :: navBar"></div>
+    <div class="text-center" style="margin-top: 50px;"></div><input type="search" id="tSearch" onkeydown="filterTbl()" placeholder="Search by keyword" name="tsearch" style="width: 400px;height: 50px;margin-right: 30px;margin-left: 80px; padding-left:10px; padding-right:10px">
+    <div class="btn-group" role="group"><button class="btn btn-primary" type="button" data-bs-target="#formModal" data-bs-toggle="modal"><i class="fas fa-plus"></i>&nbsp;New&nbsp;</button></div>
+    <div style="margin-top: 10px;padding: 10px;padding-right: 20px;padding-left: 20px;">
+        <div class="table-responsive" style="margin-bottom: 50px;">
+            <table class="table" id="tbl">
+                <thead>
+                    <tr style="background: var(--bs-info);">
+                        <th>ID</th>
+                        <th>name</th>
+                        <th>Designation</th>
+                        <th>Salary</th>
+                        <th class="text-center">Image</th>
+                        <th >Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="emp :${emplist}" th:classappend="${emp.salary < 5000} ? 'table-danger text-danger' : (${emp.salary > 5000} ? 'table-success text-success' : 'table-warning text-warning')" >
+                        <td th:text="${emp.id}"></td>
+                        <td th:text="${emp.name}"></td>
+                        <td th:text="${emp.designation}"></td>
+                        <td th:text="${emp.salary}"></td>
+                        <td class="text-center"> <img th:src="@{/assets/img/{fileName}/(fileName = ${emp.id + '.' + emp.ext})}" height="80px" width="100px"> </td>
+                        <td><a th:href="@{/emp/delete/{empid}/(empid=${emp.id})}" class="btn btn-danger" role="button">Delete&nbsp;<i class="far fa-trash-alt"></i></a></td>
+<!--                        <td>-->
+<!--                            <div class="btn-group" role="group"><a class="btn btn-primary" role="button" style="margin-left: 10px;" th:href="@{/emps/delete/{empID}/(empID=${emp.id})}"><i class="far fa-trash-alt"></i></a></div>-->
+<!--                        </td>-->
+                    </tr>
+                    <tr></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <nav>
+        <ul class="pagination">
+
+            <!-- Previous Button Code Started -->
+            <li class="page-item" th:classappend="${(curPage == 1)} ? 'disabled'">
+                <a class="page-link"
+                   aria-label="Previous"
+                   th:href="@{/emp/reg/{curPage}/(curPage=${curPage-1})}">
+                    <span aria-hidden="true">«</span>
+                </a>
+            </li>
+            <!-- Previous Button Code Ended -->
+
+            <!-- Pagination Button Loop Started -->
+            <li class="page-item"
+                th:classappend="${(pageNo == curPage)} ? 'active'"
+                th:each="pageNo : ${#numbers.sequence(1, totalPages)}">
+                <a class="page-link"
+                   th:href="@{/emp/reg/{curPage}/(curPage=${pageNo})}"
+                   th:text="${pageNo}">
+                </a>
+            </li>
+            <!-- Pagination Button Loop Ended -->
+
+            <!-- Next Button Code Started -->
+            <li class="page-item"
+                th:classappend="${(curPage == totalPages)} ? 'disabled'">
+                <a class="page-link"
+                   aria-label="Next"
+                   th:href="@{/emp/reg/{curPage}/(curPage=${curPage+1})}">
+                    <span aria-hidden="true">»</span>
+                </a>
+            </li>
+            <!-- Next Button Code Ended -->
+
+        </ul>
+    </nav>
+
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="formModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">&nbsp; Create New Account</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="background: var(--bs-gray-600);">
+                    <section class="py-4 py-xl-5" style="background: var(--bs-warning);">
+                        <div class="container">
+                            <div class="card mb-5">
+                                <div class="card-body p-sm-5">
+                                    <h2 class="text-center mb-4">Register</h2>
+                                    <form method="post" action="/emp/" th:object="${Employee}" enctype="multipart/form-data">
+                                        <div class="mb-3"><input class="form-control" type="text" id="name-2" name="name" placeholder="Name"></div>
+                                        <div class="mb-3"><input class="form-control" type="text" id="name-3" name="designation" placeholder="Enter a designation"></div>
+                                        <div class="mb-3"><input class="form-control" type="file" id="name-4" name="file" accept="image/*"></div>
+
+                                        <div class="mb-3"><input class="form-control" type="text" id="name-1" name="salary" placeholder="Enter a salary" inputmode="numeric"></div>
+                                        <div><button class="btn btn-primary d-block w-100" type="submit">save</button></div>
+                                        <div><button class="btn btn-danger d-block w-100" type="reset" style="margin-top: 10px;">clear</button></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>
