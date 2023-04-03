@@ -16,7 +16,7 @@
       <ul class="navbar-nav me-auto">
         <li class="nav-item"><a class="nav-link " href="/" style="font-size: 18px;" th:classappend="${#ctx.springRequestContext.requestUri=='/'} ? 'active'">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="/home/" style="font-size: 18px;" th:classappend="${#strings.startsWith(#ctx.springRequestContext.requestUri,'/home/')} ? 'active'">Register</a></li>
-      </ul><button class="btn btn-primary" type="button">Button</button>
+      </ul><a class="btn btn-primary" href="/logout">Logout</a>
     </div>
   </div>
 </nav>
