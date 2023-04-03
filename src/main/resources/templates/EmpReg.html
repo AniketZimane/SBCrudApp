@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/assets/css/Login-Form-Basic-icons.css">
     <link rel="stylesheet" href="/assets/css/styles.css">
     <script src="/assets/bootstrap/js/sweetalert.min.js"></script>
+    <script src="/assets/bootstrap/js/registration.js"></script>
     <script>
         function filterTbl(input) {
 		  var input, filter, table, tr, td, cell, i, j;
@@ -74,6 +75,7 @@
                         <th>name</th>
                         <th>Designation</th>
                         <th>Salary</th>
+                        <th>Date</th>
                         <th class="text-center">Image</th>
                         <th >Action</th>
                     </tr>
@@ -84,6 +86,7 @@
                         <td th:text="${emp.name}"></td>
                         <td th:text="${emp.designation}"></td>
                         <td th:text="${emp.salary}"></td>
+                        <td th:text="${#dates.format(emp.date,'MM-dd-yyyy')}"></td>
                         <td class="text-center"> <img th:src="@{/assets/img/{fileName}/(fileName = ${emp.id + '.' + emp.ext})}" height="80px" width="100px"> </td>
                         <td><a th:href="@{/emp/delete/{empid}/(empid=${emp.id})}" class="btn btn-danger" role="button">Delete&nbsp;<i class="far fa-trash-alt"></i></a></td>
 <!--                        <td>-->
@@ -149,6 +152,8 @@
                                     <form method="post" action="/emp/" th:object="${Employee}" enctype="multipart/form-data">
                                         <div class="mb-3"><input class="form-control" type="text" id="name-2" name="name" placeholder="Name"></div>
                                         <div class="mb-3"><input class="form-control" type="text" id="name-3" name="designation" placeholder="Enter a designation"></div>
+                                        <div class="mb-3"><input class="form-control" type="date"  name="date" ></div>
+
                                         <div class="mb-3"><input class="form-control" type="file" id="name-4" name="file" accept="image/*"></div>
 
                                         <div class="mb-3"><input class="form-control" type="text" id="name-1" name="salary" placeholder="Enter a salary" inputmode="numeric"></div>

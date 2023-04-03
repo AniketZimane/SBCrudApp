@@ -1,6 +1,9 @@
 package com.example.SpringBootFirstApp;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 @Entity
 public class Employee
@@ -15,11 +18,15 @@ public class Employee
 
     String ext;
 
-    public Employee(String name, String designation, double salary, String ext) {
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    Date date;
+
+    public Employee(String name, String designation, double salary, String ext, Date date) {
         this.name = name;
         this.designation = designation;
         this.salary = salary;
         this.ext = ext;
+        this.date = date;
     }
 
     public Employee() {
@@ -65,6 +72,14 @@ public class Employee
         this.ext = ext;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     @Override
     public String toString() {
         return "Employee{" +
@@ -72,6 +87,8 @@ public class Employee
                 ", name='" + name + '\'' +
                 ", designation='" + designation + '\'' +
                 ", salary=" + salary +
+                ", ext='" + ext + '\'' +
+                ", date=" + date +
                 '}';
     }
 }
